@@ -1,2 +1,892 @@
 # YEGASSI
-Analyse de donnees
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yegassi — Réseaux Sociaux & Jeunesse Camerounaise 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#00C853; --red:#D32F2F; --yellow:#FFC107;
+  --dark:#07090F; --card:#0F1521; --card2:#141C2C;
+  --border:rgba(255,255,255,.07); --text:#DDE3F0; --muted:#6B7A99;
+  --accent:#3D8EFF; --accent2:#FF6B35;
+  --hf: 'Syne', sans-serif; --bf: 'Plus Jakarta Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text);font-family:var(--bf);min-height:100vh;overflow-x:hidden}
+
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 45% at 10% 5%, rgba(0,200,83,.13) 0%,transparent 65%),
+    radial-gradient(ellipse 45% 40% at 90% 85%, rgba(61,142,255,.1) 0%,transparent 60%),
+    radial-gradient(ellipse 35% 25% at 55% 40%, rgba(255,107,53,.06) 0%,transparent 55%);
+}
+
+/* ── TICKER ── */
+.ticker-wrap{background:rgba(0,200,83,.05);border-bottom:1px solid rgba(0,200,83,.18);padding:9px 0;overflow:hidden;position:relative;z-index:2}
+.ticker{display:flex;gap:56px;white-space:nowrap;animation:tick 35s linear infinite}
+.ti{font-size:.72rem;font-weight:600;color:var(--green);letter-spacing:.04em;display:flex;align-items:center;gap:7px}
+.ti::before{content:'▸';font-size:.55rem}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SHELL ── */
+.shell{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 28px}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0;border-bottom:1px solid var(--border);margin-bottom:60px}
+.logo{font-family:var(--hf);font-weight:800;font-size:1.5rem;letter-spacing:-.03em;display:flex;align-items:center;gap:11px}
+.flag{display:flex;gap:3px}
+.flag span{width:7px;height:22px;border-radius:2px}
+.fg{background:var(--green)}.fr{background:var(--red)}.fy{background:var(--yellow)}
+.nbadge{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(61,142,255,.12);border:1px solid rgba(61,142,255,.3);
+  color:var(--accent);padding:5px 13px;border-radius:99px}
+.live{display:flex;align-items:center;gap:7px;font-size:.75rem;color:var(--muted)}
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:5px;width:fit-content;margin-bottom:48px}
+.tab{font-family:var(--bf);font-size:.8rem;font-weight:600;padding:9px 20px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:.02em}
+.tab.active{background:var(--card2);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+
+/* ── HERO ── */
+.hero{margin-bottom:56px}
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:28px;height:2px;background:var(--accent);display:inline-block;border-radius:2px}
+.hero h1{font-family:var(--hf);font-size:clamp(2.5rem,5.5vw,4.8rem);font-weight:800;line-height:1.04;letter-spacing:-.03em;margin-bottom:18px}
+.hero h1 em{font-style:normal;color:var(--green)}
+.hero p{max-width:600px;color:var(--muted);font-size:1rem;line-height:1.75;margin-bottom:32px}
+.src{display:inline-flex;align-items:center;gap:7px;font-size:.72rem;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px}
+.src strong{color:var(--text)}
+
+/* ── FILTER ROW ── */
+.filter-row{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:56px}
+.fbtn{font-family:var(--bf);font-size:.78rem;font-weight:600;padding:8px 18px;border-radius:99px;
+  border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:all .2s}
+.fbtn:hover,.fbtn.active{background:rgba(0,200,83,.12);border-color:rgba(0,200,83,.5);color:var(--green)}
+
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:44px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px;position:relative;overflow:hidden;cursor:default;transition:transform .2s,box-shadow .2s}
+.kpi:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.k1::after{background:var(--green)}.k2::after{background:var(--accent)}.k3::after{background:var(--yellow)}.k4::after{background:var(--accent2)}
+.klabel{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.kval{font-family:var(--hf);font-size:2.6rem;font-weight:800;line-height:1;margin-bottom:6px}
+.k1 .kval{color:var(--green)}.k2 .kval{color:var(--accent)}.k3 .kval{color:var(--yellow)}.k4 .kval{color:var(--accent2)}
+.ksub{font-size:.75rem;color:var(--muted);line-height:1.5}
+.kico{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:2.2rem;opacity:.1}
+.ktag{display:inline-block;margin-top:8px;font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:99px}
+.ktag.up{background:rgba(0,200,83,.15);color:var(--green)}.ktag.dn{background:rgba(211,47,47,.15);color:var(--red)}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-bottom:20px}
+.g2r{display:grid;grid-template-columns:1fr 1.5fr;gap:20px;margin-bottom:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px}
+.g22{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;transition:box-shadow .2s}
+.card:hover{box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.ctitle{font-family:var(--hf);font-size:.78rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ctitle-icon{font-size:.95rem}
+
+/* ── BAR CHART ── */
+.barchart{display:flex;flex-direction:column;gap:13px}
+.brow{display:flex;align-items:center;gap:11px}
+.blabel{font-size:.8rem;width:88px;flex-shrink:0;color:var(--text);font-weight:500}
+.btrack{flex:1;height:9px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden}
+.bfill{height:100%;border-radius:99px;width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+.bpct{font-size:.75rem;font-weight:700;width:36px;text-align:right}
+
+/* ── PLATFORM CARDS (with SVG logos) ── */
+.plat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.plat{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:18px;
+  display:flex;flex-direction:column;gap:10px;transition:all .2s;cursor:default}
+.plat:hover{border-color:rgba(255,255,255,.15);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.plat-top{display:flex;align-items:center;gap:10px}
+.plat-logo{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.plat-name{font-family:var(--hf);font-size:.88rem;font-weight:700}
+.plat-users{font-family:var(--hf);font-size:1.5rem;font-weight:800}
+.plat-pct{font-size:.72rem;color:var(--muted);font-weight:500}
+.plat-trend{font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:4px}
+.plat-bar{height:3px;border-radius:2px;width:100%;background:rgba(255,255,255,.06);overflow:hidden}
+.plat-bfill{height:100%;border-radius:2px;width:0;transition:width 1.5s ease}
+.tup{color:var(--green)}.tdn{color:var(--red)}
+
+/* ── DONUT ── */
+.donut-wrap{display:flex;align-items:center;gap:22px}
+.dlegend{display:flex;flex-direction:column;gap:10px;flex:1}
+.ditem{display:flex;align-items:center;gap:8px;font-size:.8rem}
+.ddot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── REGION TABLE ── */
+.rtable{width:100%;border-collapse:collapse}
+.rtable th{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  text-align:left;padding:9px 12px;border-bottom:1px solid var(--border)}
+.rtable td{font-size:.8rem;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.03);transition:background .15s}
+.rtable tr:hover td{background:rgba(255,255,255,.025)}
+.rtable tr:last-child td{border-bottom:none}
+.rbadge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:.67rem;font-weight:700}
+.rb-h{background:rgba(0,200,83,.14);color:var(--green)}
+.rb-m{background:rgba(255,193,7,.12);color:var(--yellow)}
+.rb-l{background:rgba(211,47,47,.12);color:var(--red)}
+.mini-bar{height:5px;border-radius:3px;display:inline-block;min-width:4px}
+
+/* ── HEATMAP ── */
+.hdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.hday{font-size:.63rem;text-align:center;color:var(--muted)}
+.hmap{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.hcell{aspect-ratio:1;border-radius:5px;cursor:pointer;transition:transform .15s;position:relative}
+.hcell:hover{transform:scale(1.35);z-index:10}
+
+/* ── TIMELINE SVG ── */
+.tl-wrap{height:150px;position:relative}
+.tl-svg{width:100%;height:100%}
+.tl-legend{display:flex;gap:18px;margin-top:12px;font-size:.73rem}
+.tl-li{display:flex;align-items:center;gap:6px}
+.tl-line{width:20px;height:2px;border-radius:2px;display:inline-block}
+
+/* ── AGE PYRAMID ── */
+.pyramid{display:flex;flex-direction:column;gap:9px}
+.pyrow{display:flex;align-items:center;gap:8px}
+.pylabel{font-size:.72rem;width:46px;text-align:right;color:var(--muted);flex-shrink:0}
+.pybars{flex:1;display:flex;height:22px;gap:2px}
+.pyf{background:rgba(61,142,255,.6);border-radius:2px 0 0 2px;height:100%}
+.pym{background:rgba(0,200,83,.6);border-radius:0 2px 2px 0;height:100%}
+
+/* ── DATA TABLE ── */
+.dtable{width:100%;border-collapse:collapse}
+.dtable th{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border)}
+.dtable td{font-size:.8rem;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.03)}
+.dtable tr:hover td{background:rgba(255,255,255,.025)}
+.dtable tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.68rem;font-weight:700}
+.bh{background:rgba(0,200,83,.14);color:var(--green)}
+.bm{background:rgba(255,193,7,.12);color:var(--yellow)}
+.bl{background:rgba(211,47,47,.12);color:var(--red)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:30px 0;display:flex;align-items:center;justify-content:space-between;font-size:.73rem;color:var(--muted);margin-top:20px}
+.flinks{display:flex;gap:20px}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.fu{opacity:0;animation:fadeUp .65s ease forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.13s}.d3{animation-delay:.22s}
+.d4{animation-delay:.3s}.d5{animation-delay:.38s}.d6{animation-delay:.46s}
+
+/* ── SECTION DIVIDER ── */
+.sdiv{display:flex;align-items:center;gap:14px;margin:40px 0 24px;font-family:var(--hf);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── INFO BOX ── */
+.infobox{background:rgba(61,142,255,.07);border:1px solid rgba(61,142,255,.2);border-radius:12px;padding:14px 18px;font-size:.78rem;color:rgba(61,142,255,.9);margin-bottom:20px;line-height:1.6}
+.infobox strong{color:var(--accent)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.g2,.g2r,.g3{grid-template-columns:1fr}.g22{grid-template-columns:1fr}.plat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kpi-grid{grid-template-columns:1fr 1fr}.plat-grid{grid-template-columns:repeat(2,1fr)}.tabs{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker">
+    <span class="ti">5,45 M utilisateurs sociaux au Cameroun — Jan 2025 (DataReportal)</span>
+    <span class="ti">WhatsApp : 97,7% des jeunes 18–35 ans (PubMed 2024)</span>
+    <span class="ti">Facebook : 7,1M d'utilisateurs — plateforme #1 (NapoleonCat Jan 2026)</span>
+    <span class="ti">TikTok : 43,4% des jeunes camerounais actifs</span>
+    <span class="ti">+7,9% de nouveaux utilisateurs sociaux en 2025</span>
+    <span class="ti">12,4 M d'internautes · 41,9% de pénétration internet</span>
+    <span class="ti">LinkedIn : 1,6M membres (+16,7% en un an)</span>
+    <span class="ti">Âge médian Cameroun : 18 ans · 60,2% urbain</span>
+    <span class="ti">5,45 M utilisateurs sociaux au Cameroun — Jan 2025 (DataReportal)</span>
+    <span class="ti">WhatsApp : 97,7% des jeunes 18–35 ans (PubMed 2024)</span>
+    <span class="ti">Facebook : 7,1M d'utilisateurs — plateforme #1 (NapoleonCat Jan 2026)</span>
+    <span class="ti">TikTok : 43,4% des jeunes camerounais actifs</span>
+    <span class="ti">+7,9% de nouveaux utilisateurs sociaux en 2025</span>
+    <span class="ti">12,4 M d'internautes · 41,9% de pénétration internet</span>
+    <span class="ti">LinkedIn : 1,6M membres (+16,7% en un an)</span>
+    <span class="ti">Âge médian Cameroun : 18 ans · 60,2% urbain</span>
+  </div>
+</div>
+
+<div class="shell">
+
+<!-- NAV -->
+<nav class="fu d1">
+  <div class="logo">
+    <div class="flag"><span class="fg"></span><span class="fr"></span><span class="fy"></span></div>
+    Yegassi
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="live"><div class="ldot"></div>Données 2025</div>
+    <div class="nbadge">Analytics 🇨🇲</div>
+  </div>
+</nav>
+
+<!-- TABS -->
+<div class="tabs fu d1" id="tabs">
+  <button class="tab active" onclick="switchTab('national',this)">Vue Nationale</button>
+  <button class="tab" onclick="switchTab('regions',this)">Par Région</button>
+  <button class="tab" onclick="switchTab('platforms',this)">Plateformes</button>
+  <button class="tab" onclick="switchTab('comportements',this)">Comportements</button>
+</div>
+
+<!-- ════════════════ VUE NATIONALE ════════════════ -->
+<div id="tab-national">
+
+<div class="hero fu d2">
+  <div class="eyebrow">Étude nationale · Cameroun · 2025</div>
+  <h1>Réseaux Sociaux &<br><em>Jeunesse</em> Camerounaise</h1>
+  <p>Analyse des comportements numériques des 15–35 ans au Cameroun. Données agrégées des rapports DataReportal 2025, NapoleonCat 2026, We Are Social / Meltwater et études scientifiques PubMed 2024.</p>
+  <div class="src">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    Sources : <strong>DataReportal · NapoleonCat · We Are Social · PubMed</strong> — Cameroun 2024–2025
+  </div>
+</div>
+
+<div class="infobox fu d2">
+  📌 <strong>Note méthodologique :</strong> Population totale 29,5 M (2025). Utilisateurs internet : 12,4 M (41,9%). Utilisateurs réseaux sociaux : 5,45 M (18,5% population totale, 44,1% des internautes). Les données par plateforme proviennent des outils publicitaires Meta, LinkedIn et des rapports NapoleonCat / We Are Social.
+</div>
+
+<!-- KPIs -->
+<div class="kpi-grid fu d3">
+  <div class="kpi k1">
+    <div class="klabel">Utilisateurs sociaux</div>
+    <div class="kval" data-target="5450000">0</div>
+    <div class="ksub">Jan 2025 · DataReportal</div>
+    <div class="ktag up">↑ +7,9% vs 2024</div>
+    <div class="kico">📱</div>
+  </div>
+  <div class="kpi k2">
+    <div class="klabel">Internautes</div>
+    <div class="kval" data-target="12400000">0</div>
+    <div class="ksub">41,9% de la population</div>
+    <div class="ktag up">↑ +2,6% en un an</div>
+    <div class="kico">🌐</div>
+  </div>
+  <div class="kpi k3">
+    <div class="klabel">Connexions mobiles</div>
+    <div class="kval" data-target="25500000">0</div>
+    <div class="ksub">86,3% sont haut débit</div>
+    <div class="ktag up">↑ +0,9% en un an</div>
+    <div class="kico">📶</div>
+  </div>
+  <div class="kpi k4">
+    <div class="klabel">Âge médian national</div>
+    <div class="kval" data-target="18" data-suffix=" ans">0</div>
+    <div class="ksub">Population très jeune</div>
+    <div class="ktag up">60,2% urbain</div>
+    <div class="kico">🎂</div>
+  </div>
+</div>
+
+<!-- ROW 1 -->
+<div class="g2 fu d4">
+  <div class="card">
+    <div class="ctitle">Plateformes les plus utilisées — jeunes 18–35 ans <span class="ctitle-icon">📊</span></div>
+    <div class="barchart" id="barChart">
+      <div class="brow"><div class="blabel">WhatsApp</div><div class="btrack"><div class="bfill" style="background:#25D366" data-w="97.7"></div></div><div class="bpct" style="color:#25D366">97,7%</div></div>
+      <div class="brow"><div class="blabel">Facebook</div><div class="btrack"><div class="bfill" style="background:#1877F2" data-w="66.9"></div></div><div class="bpct" style="color:#1877F2">66,9%</div></div>
+      <div class="brow"><div class="blabel">TikTok</div><div class="btrack"><div class="bfill" style="background:#ff0050" data-w="43.4"></div></div><div class="bpct" style="color:#ff0050">43,4%</div></div>
+      <div class="brow"><div class="blabel">Instagram</div><div class="btrack"><div class="bfill" style="background:#E1306C" data-w="31"></div></div><div class="bpct" style="color:#E1306C">31%</div></div>
+      <div class="brow"><div class="blabel">YouTube</div><div class="btrack"><div class="bfill" style="background:#FF0000" data-w="59.3"></div></div><div class="bpct" style="color:#FF0000">59,3%</div></div>
+      <div class="brow"><div class="blabel">LinkedIn</div><div class="btrack"><div class="bfill" style="background:#0A66C2" data-w="18"></div></div><div class="bpct" style="color:#0A66C2">18%</div></div>
+      <div class="brow"><div class="blabel">Messenger</div><div class="btrack"><div class="bfill" style="background:#0084FF" data-w="22"></div></div><div class="bpct" style="color:#0084FF">22%</div></div>
+      <div class="brow"><div class="blabel">X (Twitter)</div><div class="btrack"><div class="bfill" style="background:#aaa" data-w="6.7"></div></div><div class="bpct" style="color:#aaa">6,7%</div></div>
+    </div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:16px;line-height:1.5">Source : enquête PubMed (151 jeunes cam., 2024) · NapoleonCat (chiffres absolus Jan 2026) · We Are Social 2025</p>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Usage déclaré principal <span class="ctitle-icon">🎯</span></div>
+    <div class="donut-wrap" style="margin-bottom:24px">
+      <svg id="donutSvg" width="130" height="130" viewBox="0 0 130 130">
+        <circle cx="65" cy="65" r="50" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="18"/>
+      </svg>
+      <div class="dlegend" id="dlegend"></div>
+    </div>
+
+    <div class="ctitle" style="margin-top:8px">Répartition Homme / Femme <span class="ctitle-icon">👥</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:5px"><span style="color:var(--accent)">Hommes</span><span style="font-weight:700;color:var(--accent)">58,3%</span></div>
+        <div style="height:8px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden"><div style="height:100%;width:0;background:var(--accent);border-radius:99px;transition:width 1.4s ease" data-w="58.3" class="bfill"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:5px"><span style="color:#FF6B9D">Femmes</span><span style="font-weight:700;color:#FF6B9D">41,7%</span></div>
+        <div style="height:8px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden"><div style="height:100%;width:0;background:#FF6B9D;border-radius:99px;transition:width 1.4s ease" data-w="41.7" class="bfill"></div></div>
+      </div>
+    </div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:14px">Source : DataReportal Digital 2025 Cameroon</p>
+
+    <div class="ctitle" style="margin-top:20px">Tranche d'âge dominante <span class="ctitle-icon">🎂</span></div>
+    <div class="pyramid" id="pyramid">
+      <div class="pyrow"><div class="pylabel">15–17</div><div class="pybars"><div style="display:flex;flex:1;flex-direction:row-reverse"><div class="pyf" style="width:35%"></div></div><div style="display:flex;flex:1"><div class="pym" style="width:40%"></div></div></div></div>
+      <div class="pyrow"><div class="pylabel">18–24</div><div class="pybars"><div style="display:flex;flex:1;flex-direction:row-reverse"><div class="pyf" style="width:62%"></div></div><div style="display:flex;flex:1"><div class="pym" style="width:70%"></div></div></div></div>
+      <div class="pyrow"><div class="pylabel">25–34</div><div class="pybars"><div style="display:flex;flex:1;flex-direction:row-reverse"><div class="pyf" style="width:80%"></div></div><div style="display:flex;flex:1"><div class="pym" style="width:85%"></div></div></div></div>
+      <div class="pyrow"><div class="pylabel">35–44</div><div class="pybars"><div style="display:flex;flex:1;flex-direction:row-reverse"><div class="pyf" style="width:55%"></div></div><div style="display:flex;flex:1"><div class="pym" style="width:58%"></div></div></div></div>
+    </div>
+    <div style="display:flex;gap:14px;margin-top:10px;font-size:.7rem">
+      <span style="color:rgba(61,142,255,.9);display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:rgba(61,142,255,.6);border-radius:2px;display:inline-block"></span>Femmes</span>
+      <span style="color:rgba(0,200,83,.9);display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:rgba(0,200,83,.6);border-radius:2px;display:inline-block"></span>Hommes</span>
+    </div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:10px">Source : NapoleonCat Jan 2026 · Les 25–34 ans forment le plus grand groupe</p>
+  </div>
+</div>
+
+<!-- ROW 2 -->
+<div class="g22 fu d5">
+  <div class="card">
+    <div class="ctitle">Heures de pointe hebdomadaires <span class="ctitle-icon">🔥</span></div>
+    <div class="hdays"><span class="hday">Lun</span><span class="hday">Mar</span><span class="hday">Mer</span><span class="hday">Jeu</span><span class="hday">Ven</span><span class="hday">Sam</span><span class="hday">Dim</span></div>
+    <div class="hmap" id="hmap"></div>
+    <div style="display:flex;align-items:center;gap:7px;margin-top:12px;font-size:.68rem;color:var(--muted)">
+      Faible
+      <div style="display:flex;gap:3px">
+        <div style="width:12px;height:12px;border-radius:3px;background:rgba(0,200,83,.08)"></div>
+        <div style="width:12px;height:12px;border-radius:3px;background:rgba(0,200,83,.25)"></div>
+        <div style="width:12px;height:12px;border-radius:3px;background:rgba(0,200,83,.45)"></div>
+        <div style="width:12px;height:12px;border-radius:3px;background:rgba(0,200,83,.7)"></div>
+        <div style="width:12px;height:12px;border-radius:3px;background:rgba(0,200,83,.95)"></div>
+      </div>
+      Élevé
+    </div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:10px">Modèle basé sur les habitudes africaines (ITU / Kepios 2025) : pic le soir (19h–22h), week-end élevé</p>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Évolution utilisateurs sociaux 2020–2025 <span class="ctitle-icon">📈</span></div>
+    <div class="tl-wrap"><svg class="tl-svg" id="tlSvg" viewBox="0 0 400 150" preserveAspectRatio="none"></svg></div>
+    <div class="tl-legend">
+      <div class="tl-li"><div class="tl-line" style="background:var(--green)"></div><span style="color:var(--muted)">Utilisateurs sociaux (millions)</span></div>
+      <div class="tl-li"><div class="tl-line" style="background:var(--accent);border-style:dashed"></div><span style="color:var(--muted)">Internautes (millions)</span></div>
+    </div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:10px">Sources : DataReportal Digital 2020→2025 Cameroun · We Are Social / Meltwater</p>
+  </div>
+</div>
+
+</div><!-- /tab-national -->
+
+<!-- ════════════════ RÉGIONS ════════════════ -->
+<div id="tab-regions" style="display:none">
+<div class="hero fu d2">
+  <div class="eyebrow">Les 10 régions du Cameroun</div>
+  <h1>Digital par <em>Région</em></h1>
+  <p>Pénétration internet et usage des réseaux sociaux dans les 10 régions. Le déploiement reste fortement concentré à Douala et Yaoundé. Données croisées : MINPOSTEL, DataReportal, enquêtes terrain 2024.</p>
+</div>
+
+<div class="infobox">
+  📌 <strong>Contexte :</strong> En 2022, le taux de pénétration du haut débit mobile est passé de 18% (2018) à 39% (MINPOSTEL). Le déploiement fibre reste concentré dans les centres urbains. Les régions rurales (Adamaoua, Nord, Extrême-Nord) restent en marge du développement numérique.
+</div>
+
+<div class="card fu d3" style="margin-bottom:20px">
+  <div class="ctitle">Pénétration internet & réseaux sociaux par région <span class="ctitle-icon">🗺️</span></div>
+  <table class="rtable">
+    <thead>
+      <tr>
+        <th>Région</th>
+        <th>Capitale</th>
+        <th>Pop. estimée</th>
+        <th>Internet %</th>
+        <th>RS %</th>
+        <th>Tendance</th>
+        <th>Niveau</th>
+      </tr>
+    </thead>
+    <tbody id="regionTable"></tbody>
+  </table>
+  <p style="font-size:.68rem;color:var(--muted);margin-top:14px;line-height:1.5">Sources : MINPOSTEL 2022–2024 · DataReportal · Banque Mondiale · kamer-android.com 2025. Les % internet région sont des estimations basées sur la distribution urbain/rural (60,2% urbain national) et la concentration des infrastructures.</p>
+</div>
+
+<div class="g3 fu d4">
+  <div class="card">
+    <div class="ctitle">Centre & Littoral — Moteurs numériques <span class="ctitle-icon">🏙️</span></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="background:var(--card2);border-radius:12px;padding:14px">
+        <div style="font-size:.8rem;font-weight:600;margin-bottom:6px">Centre (Yaoundé)</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--green);font-family:var(--hf)">68%</div>
+        <div style="font-size:.72rem;color:var(--muted)">Pénétration internet estimée</div>
+        <div class="btrack" style="margin-top:8px"><div class="bfill" style="background:var(--green)" data-w="68"></div></div>
+      </div>
+      <div style="background:var(--card2);border-radius:12px;padding:14px">
+        <div style="font-size:.8rem;font-weight:600;margin-bottom:6px">Littoral (Douala)</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--accent);font-family:var(--hf)">72%</div>
+        <div style="font-size:.72rem;color:var(--muted)">Pénétration internet estimée</div>
+        <div class="btrack" style="margin-top:8px"><div class="bfill" style="background:var(--accent)" data-w="72"></div></div>
+      </div>
+    </div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:10px">Douala + Yaoundé concentrent ~64% du trafic internet national</p>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Régions intermédiaires <span class="ctitle-icon">🌇</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px" id="midRegions"></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Régions en développement <span class="ctitle-icon">🌱</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px" id="devRegions"></div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:12px;line-height:1.5">Les régions Nord, Adamaoua et Extrême-Nord souffrent de la faiblesse des infrastructures. 4G couvre ~60% national mais beaucoup moins dans ces zones.</p>
+  </div>
+</div>
+</div><!-- /tab-regions -->
+
+<!-- ════════════════ PLATEFORMES ════════════════ -->
+<div id="tab-platforms" style="display:none">
+<div class="hero fu d2">
+  <div class="eyebrow">Chiffres officiels NapoleonCat · Jan 2026</div>
+  <h1>Aperçu des <em>Plateformes</em></h1>
+  <p>Données issues des outils publicitaires officiels des plateformes, agrégées par NapoleonCat (Jan 2026) et We Are Social / Meltwater (Jan 2025). Utilisateurs enregistrés au Cameroun, tous âges.</p>
+</div>
+
+<div class="card fu d3" style="margin-bottom:20px">
+  <div class="ctitle">Toutes les plateformes — Cameroun (Jan 2026) <span class="ctitle-icon">🚀</span></div>
+  <div class="plat-grid" id="platGrid"></div>
+  <p style="font-size:.68rem;color:var(--muted);margin-top:16px;line-height:1.5">Source : NapoleonCat Jan 2026 · We Are Social / Meltwater Jan 2025 · DataReportal. *WhatsApp & YouTube n'exposent pas de données publicitaires directes — estimé via enquêtes PubMed & rapports sectoriels.</p>
+</div>
+
+<div class="g22 fu d4">
+  <div class="card">
+    <div class="ctitle">Croissance annuelle (Jan 2025 → Jan 2026) <span class="ctitle-icon">📈</span></div>
+    <div class="barchart" id="growthChart"></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Répartition par genre sur les plateformes <span class="ctitle-icon">👥</span></div>
+    <div id="genderChart" style="display:flex;flex-direction:column;gap:14px"></div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:14px">Source : DataReportal Digital 2025 Cameroon · Outils pub. Meta & LinkedIn</p>
+  </div>
+</div>
+</div><!-- /tab-platforms -->
+
+<!-- ════════════════ COMPORTEMENTS ════════════════ -->
+<div id="tab-comportements" style="display:none">
+<div class="hero fu d2">
+  <div class="eyebrow">Analyse comportementale · 18–35 ans</div>
+  <h1>Comportements <em>Numériques</em></h1>
+  <p>Habitudes d'usage déclarées par les jeunes camerounais. Sources : enquête PubMed (n=151, 2023–2024), Kepios models 2025, DataReportal Digital 2025 Cameroun.</p>
+</div>
+
+<div class="g22 fu d3">
+  <div class="card">
+    <div class="ctitle">Motivations d'usage (Kepios 2025 · 15–24 ans) <span class="ctitle-icon">💡</span></div>
+    <div class="barchart">
+      <div class="brow"><div class="blabel">Communication</div><div class="btrack"><div class="bfill" style="background:#25D366" data-w="62.1"></div></div><div class="bpct" style="color:#25D366">62,1%</div></div>
+      <div class="brow"><div class="blabel">Info / Recherche</div><div class="btrack"><div class="bfill" style="background:var(--accent)" data-w="61"></div></div><div class="bpct" style="color:var(--accent)">61%</div></div>
+      <div class="brow"><div class="blabel">Vidéo / Divert.</div><div class="btrack"><div class="bfill" style="background:#FF0000" data-w="59.3"></div></div><div class="bpct" style="color:#FF0000">59,3%</div></div>
+      <div class="brow"><div class="blabel">Musique</div><div class="btrack"><div class="bfill" style="background:#1DB954" data-w="55.3"></div></div><div class="bpct" style="color:#1DB954">55,3%</div></div>
+      <div class="brow"><div class="blabel">Études / Tutos</div><div class="btrack"><div class="bfill" style="background:var(--yellow)" data-w="52.4"></div></div><div class="bpct" style="color:var(--yellow)">52,4%</div></div>
+      <div class="brow"><div class="blabel">Actualités</div><div class="btrack"><div class="bfill" style="background:var(--accent2)" data-w="48"></div></div><div class="bpct" style="color:var(--accent2)">48%</div></div>
+    </div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:14px">Source : Kepios models 2025 (via Ecofin Agency / ecofinagency.com)</p>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Tranche d'âge la plus active sur Facebook <span class="ctitle-icon">📊</span></div>
+    <div style="display:flex;flex-direction:column;gap:12px" id="fbAge"></div>
+    <div style="margin-top:20px">
+    <div class="ctitle">LinkedIn — Groupe dominant <span class="ctitle-icon">💼</span></div>
+    <div style="background:var(--card2);border-radius:12px;padding:16px">
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:6px">25–34 ans · Jan 2026</div>
+      <div style="font-family:var(--hf);font-size:1.8rem;font-weight:800;color:#0A66C2">820 000</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">utilisateurs sur 1 604 000 total · 51,1% du total LinkedIn</div>
+      <div class="btrack" style="margin-top:10px"><div class="bfill" style="background:#0A66C2" data-w="51.1"></div></div>
+    </div>
+    </div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:12px">Source : NapoleonCat Jan 2026</p>
+  </div>
+</div>
+
+<div class="card fu d4" style="margin-bottom:20px">
+  <div class="ctitle">Tableau de bord comportemental détaillé <span class="ctitle-icon">📋</span></div>
+  <table class="dtable">
+    <thead>
+      <tr>
+        <th>Comportement</th>
+        <th>18–24 ans</th>
+        <th>25–35 ans</th>
+        <th>Fréquence</th>
+        <th>Impact bien-être</th>
+        <th>Plateforme phare</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Messagerie instantanée</td><td>97,7%</td><td>94%</td><td>Quotidien</td><td><span class="badge bh">Positif</span></td><td>WhatsApp</td></tr>
+      <tr><td>Consommation vidéos courtes</td><td>43,4%</td><td>30%</td><td>Quotidien</td><td><span class="badge bm">Mixte</span></td><td>TikTok</td></tr>
+      <tr><td>Communication amis/famille</td><td>62,1%</td><td>58%</td><td>Quotidien</td><td><span class="badge bh">Positif</span></td><td>WhatsApp / FB</td></tr>
+      <tr><td>Recherche d'information</td><td>61%</td><td>65%</td><td>Quotidien</td><td><span class="badge bh">Positif</span></td><td>YouTube / Google</td></tr>
+      <tr><td>Divertissement vidéo</td><td>59,3%</td><td>50%</td><td>Quotidien</td><td><span class="badge bm">Mixte</span></td><td>YouTube / TikTok</td></tr>
+      <tr><td>Études & tutoriels</td><td>52,4%</td><td>45%</td><td>Hebdo</td><td><span class="badge bh">Positif</span></td><td>YouTube</td></tr>
+      <tr><td>Suivi de l'actualité</td><td>48%</td><td>62%</td><td>Quotidien</td><td><span class="badge bm">Mixte</span></td><td>Facebook / X</td></tr>
+      <tr><td>Publications personnelles</td><td>38%</td><td>28%</td><td>Hebdo</td><td><span class="badge bm">Mixte</span></td><td>Instagram</td></tr>
+      <tr><td>Usage excessif (>5h/jour)</td><td>29%</td><td>18%</td><td>Quotidien</td><td><span class="badge bl">Négatif</span></td><td>Toutes plat.</td></tr>
+      <tr><td>Commerce / Achat social</td><td>18%</td><td>27%</td><td>Mensuel</td><td><span class="badge bh">Positif</span></td><td>Facebook</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:.68rem;color:var(--muted);margin-top:14px;line-height:1.5">Sources : PubMed (Social Media and Mental Health Among Young Adults in Cameroon, 2024) · Kepios models 2025 · We Are Social / Meltwater Digital Report 2025</p>
+</div>
+
+<div class="infobox fu d5">
+  ⚠️ <strong>Impact santé mentale :</strong> L'étude PubMed (2024) conclut que l'usage excessif des réseaux sociaux impacte négativement le bien-être psychologique des jeunes camerounais. Elle souligne l'urgence de programmes d'éducation numérique adaptés culturellement et de politiques promouvant un engagement en ligne plus sain.
+</div>
+</div><!-- /tab-comportements -->
+
+<!-- FOOTER -->
+<footer class="fu d6">
+  <div>© 2025 <strong style="color:var(--text)">Yegassi</strong> — Analyse Réseaux Sociaux · Cameroun 🇨🇲</div>
+  <div class="flinks">
+    <span>DataReportal 2025</span>
+    <span>NapoleonCat 2026</span>
+    <span>We Are Social</span>
+    <span>PubMed 2024</span>
+  </div>
+</footer>
+
+</div><!-- /shell -->
+
+<script>
+/* ════ SVG LOGOS (officiels) ════ */
+const LOGOS = {
+  whatsapp:`<svg viewBox="0 0 48 48" width="24" height="24"><circle cx="24" cy="24" r="24" fill="#25D366"/><path fill="#fff" d="M24 10C16.27 10 10 16.27 10 24c0 2.52.68 4.89 1.86 6.93L10 38l7.28-1.83A14 14 0 0 0 24 38c7.73 0 14-6.27 14-14S31.73 10 24 10zm7.46 19.08c-.31.87-1.82 1.68-2.52 1.74-.65.06-1.26.3-4.24-1c-3.54-1.54-5.77-5.16-5.95-5.4-.17-.23-1.4-1.87-1.4-3.57 0-1.7.88-2.54 1.2-2.88.3-.33.66-.42.88-.42l.63.01c.2 0 .47-.08.73.56.27.66.93 2.27 1.01 2.44.08.17.13.37.02.6-.1.22-.15.36-.3.55l-.45.52c-.15.15-.3.32-.13.63.17.3.76 1.26 1.63 2.04 1.12 1 2.06 1.3 2.36 1.45.3.14.48.12.66-.07l.97-1.14c.2-.22.4-.18.67-.1.27.08 1.72.81 2.01.96.3.15.5.22.57.34.07.12.07.69-.24 1.56z"/></svg>`,
+  facebook:`<svg viewBox="0 0 48 48" width="24" height="24"><circle cx="24" cy="24" r="24" fill="#1877F2"/><path fill="#fff" d="M26.5 38V25.5H30l.5-4h-4V19c0-1.15.32-1.94 2-1.94H30.5V13.5A24 24 0 0 0 27 13.3c-3.5 0-5.9 2.14-5.9 6.07V21.5H18v4h3.1V38H26.5z"/></svg>`,
+  tiktok:`<svg viewBox="0 0 48 48" width="24" height="24"><rect width="48" height="48" rx="12" fill="#010101"/><path fill="#fff" d="M33 16.5a7.9 7.9 0 0 1-4.6-1.5v10.4a8.4 8.4 0 1 1-5.8-8v4.5a4 4 0 1 0 2.8 3.8V10h4.6a7.9 7.9 0 0 0 3 6.5z"/><path fill="#EE1D52" d="M31.5 15a7.8 7.8 0 0 1-3-6h-1.1a7.9 7.9 0 0 0 4.1 6zM22.6 30.6a4 4 0 0 1-2.8-3.8 4 4 0 0 1 4-4l.6.07v-4.5l-.6-.03a8.4 8.4 0 0 0-8.4 8.4 8.4 8.4 0 0 0 8.4 8.4 8.4 8.4 0 0 0 5.8-2.3V22.4a12 12 0 0 1-4.7 1.1v4.5l.6-.05a4 4 0 0 1-2.9 2.65z"/><path fill="#69C9D0" d="M36.5 12.5h-3a7.9 7.9 0 0 0 3 3v-3z"/></svg>`,
+  instagram:`<svg viewBox="0 0 48 48" width="24" height="24"><defs><radialGradient id="ig" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect width="48" height="48" rx="12" fill="url(#ig)"/><rect x="13" y="13" width="22" height="22" rx="6" fill="none" stroke="#fff" stroke-width="2.5"/><circle cx="24" cy="24" r="5" fill="none" stroke="#fff" stroke-width="2.5"/><circle cx="33.5" cy="14.5" r="1.5" fill="#fff"/></svg>`,
+  youtube:`<svg viewBox="0 0 48 48" width="24" height="24"><rect width="48" height="48" rx="8" fill="#FF0000"/><path fill="#fff" d="M36.3 17.6a3 3 0 0 0-2.1-2.1C32.3 15 24 15 24 15s-8.3 0-10.2.5a3 3 0 0 0-2.1 2.1C11.2 19.5 11.2 24 11.2 24s0 4.5.5 6.4a3 3 0 0 0 2.1 2.1C15.7 33 24 33 24 33s8.3 0 10.2-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-6.4.5-6.4s0-4.5-.5-6.4zM21.2 28V20l6.8 4-6.8 4z"/></svg>`,
+  linkedin:`<svg viewBox="0 0 48 48" width="24" height="24"><rect width="48" height="48" rx="8" fill="#0A66C2"/><path fill="#fff" d="M16 20h4v14h-4V20zm2-2.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zM22 20h4v2s1-2 4-2c3.5 0 6 2 6 6v8h-4v-7c0-2-1-3-2.5-3S28 25 28 27v7h-6V20z"/></svg>`,
+  messenger:`<svg viewBox="0 0 48 48" width="24" height="24"><circle cx="24" cy="24" r="24" fill="url(#mgg)"/><defs><linearGradient id="mgg" x1="0" y1="48" x2="48" y2="0"><stop offset="0%" stop-color="#0084FF"/><stop offset="100%" stop-color="#A033FF"/></linearGradient></defs><path fill="#fff" d="M24 11C16.82 11 11 16.6 11 23.6c0 3.97 1.87 7.51 4.8 9.87V38l4.51-2.48A13.4 13.4 0 0 0 24 36.2c7.18 0 13-5.6 13-12.6S31.18 11 24 11zm1.37 16.97L21.8 24l-7.1 3.97 7.84-8.37 3.57 3.97 7.1-3.97-7.84 8.37z"/></svg>`,
+  twitter:`<svg viewBox="0 0 48 48" width="24" height="24"><rect width="48" height="48" rx="8" fill="#000"/><path fill="#fff" d="M26.37 21.86L35.53 11h-2.17l-7.96 9.26L19.4 11H12l9.59 13.97L12 37h2.17l8.39-9.76L29 37h7.4L26.37 21.86zm-2.97 3.46l-.97-1.39L14.6 12.6h3.33l6.25 8.94.97 1.39 8.12 11.6H29.9l-6.5-9.3v.09z"/></svg>`,
+  snapchat:`<svg viewBox="0 0 48 48" width="24" height="24"><rect width="48" height="48" rx="12" fill="#FFFC00"/><path d="M24 11c-4 0-7.5 3-7.5 7.5v.8c-.8.1-1.5.2-2 .5-.4.3-.4.9-.1 1.2.5.5 1.3.7 2.2.8-.2.5-.5 1-.9 1.4-.8.8-1.9 1.2-3.2 1.2-.2 0-.4 0-.5.1-.2.2-.3.5 0 .8.8 1 2.2 1.7 4 2 .2 1.2 1.3 2.7 4.5 2.7.7 0 1.5-.1 2.5-.3.6.2 1.4.4 2 .4.5 0 .9-.1 1.2-.2 1.3.2 2.3.3 3 .2 2-.2 3.7-1.5 4.7-3.5.3-.6.3-1.2.1-1.7l-.2-.4c1-.3 2-.8 2.5-1.3.4-.4.3-1-.2-1.2-.5-.3-1.2-.4-2-.5v-.8C31.5 14 28 11 24 11z" fill="#fff"/></svg>`,
+};
+
+/* ════ PLATFORM DATA ════ */
+const PLATFORMS = [
+  {name:'Facebook', users:'7 102 600', num:7102600, pct:'23,2%', trend:'+32,5%', up:true, bg:'#1877F2', logo:'facebook', group:'25–34 ans'},
+  {name:'Messenger', users:'6 461 300', num:6461300, pct:'21,1%', trend:'+16,1%', up:true, bg:'#0084FF', logo:'messenger', group:'25–34 ans'},
+  {name:'WhatsApp', users:'~5 000 000*', num:5000000, pct:'~17%', trend:'+4%*', up:true, bg:'#25D366', logo:'whatsapp', group:'18–35 ans'},
+  {name:'LinkedIn', users:'1 604 000', num:1604000, pct:'5,2%', trend:'+16,7%', up:true, bg:'#0A66C2', logo:'linkedin', group:'25–34 ans'},
+  {name:'TikTok', users:'~1 300 000*', num:1300000, pct:'~4,4%', trend:'+30%*', up:true, bg:'#010101', logo:'tiktok', group:'18–24 ans'},
+  {name:'Instagram', users:'658 000', num:658000, pct:'2,1%', trend:'–9,5%', up:false, bg:'#E1306C', logo:'instagram', group:'25–34 ans'},
+  {name:'Messenger', users:'665 000', num:665000, pct:'2,3%', trend:'+16,1%', up:true, bg:'#0084FF', logo:'messenger', group:'18–34 ans'},
+  {name:'X (Twitter)', users:'199 000', num:199000, pct:'0,7%', trend:'+8,6%', up:true, bg:'#000', logo:'twitter', group:'18–34 ans'},
+  {name:'YouTube', users:'~3 000 000*', num:3000000, pct:'~10%', trend:'+11%*', up:true, bg:'#FF0000', logo:'youtube', group:'15–35 ans'},
+];
+const PLATS_UNIQUE = [
+  {name:'WhatsApp', users:'~5 000 000', num:5000000, pct:'~17%', trend:'+4%*', up:true, bg:'#25D366', logo:'whatsapp', group:'Toutes tranches'},
+  {name:'Facebook', users:'7 102 600', num:7102600, pct:'23,2%', trend:'+32,5%', up:true, bg:'#1877F2', logo:'facebook', group:'25–34 ans'},
+  {name:'YouTube', users:'~3 000 000', num:3000000, pct:'~10%', trend:'+11%*', up:true, bg:'#FF0000', logo:'youtube', group:'15–35 ans'},
+  {name:'Messenger', users:'6 461 300', num:6461300, pct:'21,1%', trend:'+16,1%', up:true, bg:'#0084FF', logo:'messenger', group:'25–34 ans'},
+  {name:'LinkedIn', users:'1 604 000', num:1604000, pct:'5,2%', trend:'+16,7%', up:true, bg:'#0A66C2', logo:'linkedin', group:'25–34 ans'},
+  {name:'TikTok', users:'~1 300 000', num:1300000, pct:'~4,4%', trend:'+30%*', up:true, bg:'#010101', logo:'tiktok', group:'18–24 ans'},
+  {name:'Instagram', users:'658 000', num:658000, pct:'2,1%', trend:'–9,5%', up:false, bg:'#E1306C', logo:'instagram', group:'25–34 ans'},
+  {name:'X (Twitter)', users:'199 000', num:199000, pct:'0,7%', trend:'+8,6%', up:true, bg:'#000', logo:'twitter', group:'18–34 ans'},
+  {name:'Snapchat', users:'~80 000', num:80000, pct:'<1%', trend:'stable', up:true, bg:'#FFFC00', logo:'snapchat', group:'15–24 ans'},
+];
+
+/* ════ REGION DATA ════ */
+const REGIONS = [
+  {name:'Littoral',     cap:'Douala',      pop:'4 200 000', inet:72, rs:32, trend:'↑ +9%',  lvl:'h'},
+  {name:'Centre',       cap:'Yaoundé',     pop:'4 800 000', inet:68, rs:30, trend:'↑ +8%',  lvl:'h'},
+  {name:'Ouest',        cap:'Bafoussam',   pop:'2 000 000', inet:45, rs:18, trend:'↑ +5%',  lvl:'m'},
+  {name:'Sud-Ouest',    cap:'Buea',        pop:'1 500 000', inet:40, rs:15, trend:'↑ +4%',  lvl:'m'},
+  {name:'Nord-Ouest',   cap:'Bamenda',     pop:'1 900 000', inet:30, rs:11, trend:'↑ +3%',  lvl:'m'},
+  {name:'Sud',          cap:'Ebolowa',     pop:'800 000',   inet:28, rs:10, trend:'→ stable', lvl:'m'},
+  {name:'Est',          cap:'Bertoua',     pop:'1 000 000', inet:22, rs:7,  trend:'↑ +2%',  lvl:'l'},
+  {name:'Adamaoua',     cap:'Ngaoundéré',  pop:'1 200 000', inet:18, rs:6,  trend:'↑ +2%',  lvl:'l'},
+  {name:'Nord',         cap:'Garoua',      pop:'2 300 000', inet:15, rs:4,  trend:'↑ +1%',  lvl:'l'},
+  {name:'Extrême-Nord', cap:'Maroua',      pop:'4 200 000', inet:10, rs:3,  trend:'→ stable', lvl:'l'},
+];
+
+/* ════ INIT ════ */
+window.addEventListener('load', () => {
+  drawDonut();
+  drawHeatmap();
+  drawTimeline();
+  buildRegionTable();
+  buildPlatGrid();
+  buildGrowthChart();
+  buildGenderChart();
+  buildFbAge();
+  buildMidDevRegions();
+  setTimeout(() => { animateCounters(); animateBars(); }, 300);
+});
+
+/* ════ TABS ════ */
+function switchTab(id, btn) {
+  ['national','regions','platforms','comportements'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===id ? '' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setTimeout(() => { animateBars(); }, 100);
+}
+
+/* ════ COUNTERS ════ */
+function animateCounters() {
+  document.querySelectorAll('.kval[data-target]').forEach(el => {
+    const target = +el.dataset.target;
+    const suffix = el.dataset.suffix || '';
+    let start = 0;
+    const step = ts => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / 1800, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      const v = Math.floor(e * target);
+      el.textContent = target >= 1000 ? v.toLocaleString('fr-FR') + suffix : v + suffix;
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target >= 1000 ? target.toLocaleString('fr-FR') + suffix : target + suffix;
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+/* ════ BARS ════ */
+function animateBars() {
+  document.querySelectorAll('.bfill[data-w]').forEach(el => {
+    el.style.width = el.dataset.w + '%';
+  });
+}
+
+/* ════ DONUT ════ */
+function drawDonut() {
+  const data = [
+    {label:'Communication',pct:38,c:'#25D366'},
+    {label:'Divertissement',pct:27,c:'#FF0000'},
+    {label:'Info / Études',pct:18,c:var_accent()},
+    {label:'Actualités',pct:10,c:'#FF6B35'},
+    {label:'Commerce',pct:7,c:'#E1306C'},
+  ];
+  const svg = document.getElementById('donutSvg');
+  const R=50,cx=65,cy=65,sw=18,circ=2*Math.PI*R;
+  let off=0;
+  data.forEach(d => {
+    const len=(d.pct/100)*circ;
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',R);
+    c.setAttribute('fill','none');c.setAttribute('stroke',d.c);c.setAttribute('stroke-width',sw);
+    c.setAttribute('stroke-dasharray',`${len} ${circ-len}`);
+    c.setAttribute('stroke-dashoffset',circ-off);
+    c.setAttribute('transform',`rotate(-90 ${cx} ${cy})`);
+    svg.appendChild(c);
+    off+=len;
+  });
+  const leg=document.getElementById('dlegend');
+  data.forEach(d=>{leg.innerHTML+=`<div class="ditem"><div class="ddot" style="background:${d.c}"></div><span style="color:var(--muted)">${d.label}</span><span style="margin-left:auto;font-weight:700;font-size:.82rem">${d.pct}%</span></div>`});
+}
+function var_accent(){return '#3D8EFF'}
+
+/* ════ HEATMAP ════ */
+function drawHeatmap() {
+  const hm=document.getElementById('hmap');
+  // 8 rows x 7 days (heures estimées en milliers de sessions)
+  const vals=[
+    6,7,6,7,8,10,8,
+    12,11,12,13,14,16,13,
+    16,15,16,17,18,20,17,
+    19,18,19,20,22,24,20,
+    22,21,22,23,25,27,23,
+    18,17,18,19,21,22,19,
+    10,9,10,11,13,16,12,
+    5,5,6,6,7,9,7,
+  ];
+  const max=Math.max(...vals);
+  vals.forEach(v=>{
+    const d=document.createElement('div');d.className='hcell';
+    const i=v/max;
+    d.style.background=`rgba(0,200,83,${(.05+i*.9).toFixed(2)})`;
+    d.title=`~${v}k sessions`;
+    hm.appendChild(d);
+  });
+}
+
+/* ════ TIMELINE ════ */
+function drawTimeline() {
+  const svg=document.getElementById('tlSvg');
+  const W=400,H=150,pad=18;
+  const yrs=['2020','2021','2022','2023','2024','2025'];
+  // Source DataReportal: 3.1M(2020), 3.6M(2021), 4.0M(2022), 4.6M(2023), 5.05M(2024), 5.45M(2025)
+  const social=[3.1,3.6,4.0,4.6,5.05,5.45];
+  // Internautes (millions)
+  const inet=[8.5,9.5,10.5,11.5,12.1,12.4];
+  const mn=2,mx=14;
+  function pts(data){return data.map((v,i)=>{
+    const x=pad+(i/(data.length-1))*(W-2*pad);
+    const y=H-pad-((v-mn)/(mx-mn))*(H-2*pad);
+    return `${x},${y}`;
+  }).join(' ')}
+  function area(data){
+    const p=data.map((v,i)=>[pad+(i/(data.length-1))*(W-2*pad),H-pad-((v-mn)/(mx-mn))*(H-2*pad)]);
+    let d=`M ${p[0][0]} ${p[0][1]}`;p.forEach(([x,y])=>d+=` L ${x} ${y}`);
+    d+=` L ${p[p.length-1][0]} ${H-pad} L ${p[0][0]} ${H-pad} Z`;return d;
+  }
+  svg.innerHTML=`
+    <defs>
+      <linearGradient id="gaS" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00C853" stop-opacity=".3"/><stop offset="100%" stop-color="#00C853" stop-opacity="0"/></linearGradient>
+      <linearGradient id="gaI" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3D8EFF" stop-opacity=".2"/><stop offset="100%" stop-color="#3D8EFF" stop-opacity="0"/></linearGradient>
+    </defs>
+    <path d="${area(inet)}" fill="url(#gaI)"/>
+    <path d="${area(social)}" fill="url(#gaS)"/>
+    <polyline points="${pts(inet)}" fill="none" stroke="#3D8EFF" stroke-width="2" stroke-dasharray="5 3" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="${pts(social)}" fill="none" stroke="#00C853" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${social.map((v,i)=>{const x=pad+(i/(social.length-1))*(W-2*pad);const y=H-pad-((v-mn)/(mx-mn))*(H-2*pad);return`<circle cx="${x}" cy="${y}" r="4" fill="#00C853" stroke="var(--card)" stroke-width="2"/><text x="${x}" y="${y-9}" text-anchor="middle" fill="#00C853" font-size="9" font-family="Plus Jakarta Sans" font-weight="700">${v}M</text>`}).join('')}
+    ${yrs.map((y,i)=>{const x=pad+(i/(yrs.length-1))*(W-2*pad);return`<text x="${x}" y="${H-1}" text-anchor="middle" fill="#6B7A99" font-size="9" font-family="Plus Jakarta Sans">${y}</text>`}).join('')}
+  `;
+}
+
+/* ════ REGION TABLE ════ */
+function buildRegionTable() {
+  const tb=document.getElementById('regionTable');
+  const cls={h:'rb-h',m:'rb-m',l:'rb-l'};
+  const lbl={h:'Élevé',m:'Moyen',l:'Faible'};
+  REGIONS.forEach(r=>{
+    tb.innerHTML+=`<tr>
+      <td><strong>${r.name}</strong></td>
+      <td>${r.cap}</td>
+      <td>${r.pop}</td>
+      <td>
+        <span style="font-weight:700;color:${r.lvl==='h'?'var(--green)':r.lvl==='m'?'var(--yellow)':'var(--red)'}">${r.inet}%</span>
+        <div class="mini-bar" style="background:${r.lvl==='h'?'var(--green)':r.lvl==='m'?'var(--yellow)':'var(--red)'};width:${r.inet*0.7}px;display:block;margin-top:3px"></div>
+      </td>
+      <td><span style="font-weight:700">${r.rs}%</span></td>
+      <td>${r.trend}</td>
+      <td><span class="rbadge ${cls[r.lvl]}">${lbl[r.lvl]}</span></td>
+    </tr>`;
+  });
+}
+
+/* ════ PLATFORM GRID ════ */
+function buildPlatGrid() {
+  const g=document.getElementById('platGrid');
+  PLATS_UNIQUE.forEach(p=>{
+    const maxN=7102600;
+    const w=Math.round((p.num/maxN)*100);
+    g.innerHTML+=`<div class="plat">
+      <div class="plat-top">
+        <div class="plat-logo" style="background:${p.bg==='#000'?'#1a1a1a':p.bg==='#FFFC00'?'#fffde7':'#0f1521'}">${LOGOS[p.logo]||'📱'}</div>
+        <div>
+          <div class="plat-name">${p.name}</div>
+          <div class="plat-pct" style="color:var(--muted)">${p.pct} de la pop.</div>
+        </div>
+      </div>
+      <div class="plat-users" style="color:${p.up?'var(--green)':'var(--red)'}">${p.users}</div>
+      <div class="plat-bar"><div class="plat-bfill" style="background:${p.bg==='#000'?'#555':p.bg==='#FFFC00'?'#d4b800':p.bg}" data-w="${w}"></div></div>
+      <div class="plat-trend ${p.up?'tup':'tdn'}">${p.up?'↑':'↓'} ${p.trend} · ${p.group}</div>
+    </div>`;
+  });
+  // animate plat bars
+  setTimeout(()=>{document.querySelectorAll('.plat-bfill').forEach(el=>el.style.width=el.dataset.w+'%')},400);
+}
+
+/* ════ GROWTH CHART ════ */
+function buildGrowthChart() {
+  const gc=document.getElementById('growthChart');
+  const data=[
+    {name:'Facebook',g:32.5,c:'#1877F2'},{name:'LinkedIn',g:16.7,c:'#0A66C2'},
+    {name:'Messenger',g:16.1,c:'#0084FF'},{name:'X (Twitter)',g:8.6,c:'#aaa'},
+    {name:'WhatsApp',g:4,c:'#25D366'},{name:'Instagram',g:-9.5,c:'#E1306C'},
+  ];
+  data.forEach(d=>{
+    const abs=Math.abs(d.g);
+    gc.innerHTML+=`<div class="brow">
+      <div class="blabel" style="font-size:.75rem">${d.name}</div>
+      <div class="btrack"><div class="bfill" style="background:${d.g>0?d.c:'var(--red)'}" data-w="${Math.min(abs*2,100)}"></div></div>
+      <div class="bpct" style="color:${d.g>0?d.c:'var(--red)'}">${d.g>0?'+':''}${d.g}%</div>
+    </div>`;
+  });
+  gc.innerHTML+=`<p style="font-size:.68rem;color:var(--muted);margin-top:10px">Source : DataReportal Digital 2025 · NapoleonCat Jan 2026</p>`;
+  setTimeout(animateBars,400);
+}
+
+/* ════ GENDER CHART ════ */
+function buildGenderChart() {
+  const gc=document.getElementById('genderChart');
+  const data=[
+    {name:'Facebook',m:58.3,f:41.7,c:'#1877F2'},
+    {name:'Instagram',m:60.1,f:39.9,c:'#E1306C'},
+    {name:'LinkedIn',m:61.8,f:38.2,c:'#0A66C2'},
+    {name:'Messenger',m:62.7,f:37.3,c:'#0084FF'},
+    {name:'Global RS',m:58.3,f:41.7,c:'var(--green)'},
+  ];
+  data.forEach(d=>{
+    gc.innerHTML+=`<div>
+      <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:5px">
+        <span style="font-weight:600">${d.name}</span>
+        <span style="color:var(--muted)"><span style="color:${d.c}">${d.m}% H</span> · <span style="color:#FF6B9D">${d.f}% F</span></span>
+      </div>
+      <div style="height:8px;border-radius:99px;overflow:hidden;display:flex">
+        <div style="width:${d.m}%;background:${d.c};transition:width 1.4s ease"></div>
+        <div style="flex:1;background:#FF6B9D;opacity:.7"></div>
+      </div>
+    </div>`;
+  });
+}
+
+/* ════ FB AGE ════ */
+function buildFbAge() {
+  const el=document.getElementById('fbAge');
+  const ages=[
+    {age:'13–17 ans',n:320000,c:'#ff9800'},{age:'18–24 ans',n:1600000,c:'#1877F2'},
+    {age:'25–34 ans',n:2600000,c:'#1877F2'},{age:'35–44 ans',n:1400000,c:'#5c85d6'},
+    {age:'45–54 ans',n:700000,c:'#8fa8d4'},{age:'55+ ans',n:480000,c:'#b0bec5'},
+  ];
+  const max=2600000;
+  ages.forEach(a=>{
+    const w=Math.round((a.n/max)*100);
+    el.innerHTML+=`<div>
+      <div style="display:flex;justify-content:space-between;font-size:.73rem;margin-bottom:4px">
+        <span style="color:var(--muted)">${a.age}</span>
+        <span style="font-weight:700;color:${a.c}">${(a.n/1000000).toFixed(2)}M</span>
+      </div>
+      <div class="btrack" style="height:7px"><div class="bfill" style="background:${a.c}" data-w="${w}"></div></div>
+    </div>`;
+  });
+  el.innerHTML+=`<p style="font-size:.67rem;color:var(--muted);margin-top:8px">Source : NapoleonCat Jan 2026 · Total Facebook Cameroun : 7,1M</p>`;
+  setTimeout(animateBars,400);
+}
+
+/* ════ MID/DEV REGIONS ════ */
+function buildMidDevRegions() {
+  const mid=document.getElementById('midRegions');
+  const dev=document.getElementById('devRegions');
+  const midR=REGIONS.filter(r=>r.lvl==='m');
+  const devR=REGIONS.filter(r=>r.lvl==='l');
+  midR.forEach(r=>{
+    mid.innerHTML+=`<div style="background:var(--card2);border-radius:10px;padding:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:.8rem;font-weight:600">${r.name}</span>
+        <span style="font-size:.72rem;font-weight:700;color:var(--yellow)">${r.inet}%</span>
+      </div>
+      <div class="btrack" style="height:5px"><div class="bfill" style="background:var(--yellow)" data-w="${r.inet}"></div></div>
+      <div style="font-size:.68rem;color:var(--muted);margin-top:4px">${r.cap} · ${r.trend}</div>
+    </div>`;
+  });
+  devR.forEach(r=>{
+    dev.innerHTML+=`<div style="background:var(--card2);border-radius:10px;padding:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:.8rem;font-weight:600">${r.name}</span>
+        <span style="font-size:.72rem;font-weight:700;color:var(--red)">${r.inet}%</span>
+      </div>
+      <div class="btrack" style="height:5px"><div class="bfill" style="background:var(--red)" data-w="${r.inet}"></div></div>
+      <div style="font-size:.68rem;color:var(--muted);margin-top:4px">${r.cap} · ${r.trend}</div>
+    </div>`;
+  });
+  setTimeout(animateBars,400);
+}
+
+/* ════ FILTER (cosmétique) ════ */
+function setFilter(btn,r){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
